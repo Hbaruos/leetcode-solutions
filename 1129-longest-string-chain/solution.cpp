@@ -1,38 +1,33 @@
 class Solution {
-public:
-    
-    bool checkSeq(string &s1, string &s2) {
-        if (s1.size() != s2.size() + 1) return false;
-        int i = 0, j = 0;
-        while (i < s1.size()) {
-            if (j < s2.size() && s1[i] == s2[j]) 
-                i++, j++;
-            else
-                i++;
-        }
-        if (i == s1.size() && j == s2.size()) return true;
-        return false;
-    }
-    
+public:    
     bool static comp(string &s1, string &s2) {
         return s1.size() < s2.size();
     }
     
+    bool isValid(string &s1, string &s2) {
+        if (size(s1) != size(s2) + 1) return false;
+        int i = 0, j = 0;
+        while (i < size(s1)) {
+            if (j < size(s2) && s1[i] == s2[j]) i++, j++;
+            else i++;
+        }
+        if (i == size(s1) && j == size(s2)) return true;
+        else return false;
+    }    
+    
     int longestStrChain(vector<string>& words) {
-        sort(words.begin(), words.end(), comp);
-        int n = words.size();
+        sort(begin(words), end(words), comp);
+        int n = size(words);
         vector<int> dp(n, 1);
-        int maxi = 1;
+        int len = 1;
         
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < i; ++j) {
-                
-                if (checkSeq(words[i], words[j]) && 1 + dp[j] > dp[i])
+                if (isValid(words[i], words[j]) && 1 + dp[j] > dp[i])
                     dp[i] = 1 + dp[j];
-                
             }
-            maxi = max(maxi, dp[i]);
+            len = max(len, dp[i]);
         }
-    return maxi;
+        return len;
     }
 };
