@@ -1,31 +1,33 @@
 class Solution {
 public:
-    vector<int> spiralOrder(vector<vector<int>>& m) {
-        int n1 = m.size(), n2 = n1 ? m[0].size() : 0;
-        vector<int> ans(n1 * n2, 0);
-        
-        int rs = 0, cs = 0;
-        int re = n1 - 1, ce = n2 - 1;
-        int x = -1;
-        
-        while (rs <= re && cs <= ce) {
-            
-            for (int i = cs; i <= ce; ++i) 
-                ans[++x] = m[rs][i];
-            if (++rs > re) break;
-            
-            for (int i = rs; i <= re; ++i)
-                ans[++x] = m[i][ce];
-            if (--ce < cs) break;
-            
-            for (int i = ce; i >= cs; --i) 
-                ans[++x] = m[re][i];
-            if (--re < rs) break;
-            
-            for (int i = re; i >= rs; --i)
-                ans[++x] = m[i][cs];
-            if (++cs > ce) break;
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> result;
+
+        int top = 0, bottom = matrix.size() - 1;
+        int left = 0, right = matrix[0].size() - 1;
+
+        while (top <= bottom && left <= right) {
+            for (int col = left; col <= right; ++col) 
+                result.emplace_back(matrix[top][col]);
+            ++top;
+
+            for (int row = top; row <= bottom; ++row) 
+                result.emplace_back(matrix[row][right]);
+            --right;
+
+
+            if (top <= bottom) {
+                for (int col = right; col >= left; --col)
+                    result.emplace_back(matrix[bottom][col]);
+                --bottom;
+            }
+
+            if (left <= right) {
+                for (int row = bottom; row >= top; --row) 
+                    result.emplace_back(matrix[row][left]);
+                ++left;
+            }
         }
-        return ans;
+        return result;
     }
 };
