@@ -1,26 +1,57 @@
-import java.util.Stack;
-
 class Solution {
-  public int longestValidParentheses(String s) {
-    Stack<Integer> stack = new Stack<>();
-    stack.push(-1); // Base index
-
-    int maxLen = 0;
-
-    for (int i = 0; i < s.length(); i++) {
-      if (s.charAt(i) == '(') {
-        stack.push(i);
-      } else {
-        stack.pop();
-
-        if (stack.isEmpty()) {
-          stack.push(i); // New base
-        } else {
-          maxLen = Math.max(maxLen, i - stack.peek());
+    public int longestValidParentheses(String s) {
+        if (s == null || s.length() < 2) {
+            return 0;
         }
-      }
-    }
 
-    return maxLen;
-  }
+        int left = 0;
+        int right = 0;
+        int maxLength = 0;
+
+        // Pass 1: Left-to-Right Scan
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (ch == '(') {
+                left++;
+            } else {
+                right++;
+            }
+
+            // Balanced pair found
+            if (left == right) {
+                maxLength = Math.max(maxLength, left + right);
+            } 
+            // Too many closing brackets -> sequence completely broken
+            else if (right > left) {
+                left = 0;
+                right = 0;
+            }
+        }
+
+        // Reset tracking variables for the reverse pass
+        left = 0;
+        right = 0;
+
+        // Pass 2: Right-to-Left Scan (catches hanging opening brackets)
+        for (int i = s.length() - 1; i >= 0; i--) {
+            char ch = s.charAt(i);
+            if (ch == '(') {
+                left++;
+            } else {
+                right++;
+            }
+
+            // Balanced pair found
+            if (left == right) {
+                maxLength = Math.max(maxLength, left + right);
+            } 
+            // Too many opening brackets -> sequence completely broken
+            else if (left > right) {
+                left = 0;
+                right = 0;
+            }
+        }
+
+        return maxLength;
+    }
 }
